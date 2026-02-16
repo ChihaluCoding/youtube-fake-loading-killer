@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         「YouTubeの動画の再生が中断されています」という偽ロードをブロックするスクリプト
+// @name         YouTubeの偽ローディングをブロックするスクリプト
 // @version      1.3.4
 // @description  Blocks YouTube interruption toast/dialog, recovers playback, and logs diagnostics for blocker conflicts.
 // @match        https://www.youtube.com/*
