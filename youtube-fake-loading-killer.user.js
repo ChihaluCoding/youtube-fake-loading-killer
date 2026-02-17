@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         YouTubeの偽ローディングをブロックするスクリプト
-// @version      1.3.4
+// @version      1.3.5
 // @description  Blocks YouTube interruption toast/dialog, recovers playback, and logs diagnostics for blocker conflicts.
 // @match        https://www.youtube.com/*
+// @match        https://youtube.com/*
 // @run-at       document-start
 // @grant        none
 // @license      MIT
@@ -23,15 +24,16 @@
         }
     })();
 
-    // Ignore iframe/about:blank contexts; only run on top YouTube watch documents.
+    // Ignore iframe/about:blank contexts; only run on top-level YouTube documents.
     try {
         if (PAGE_WINDOW.top !== PAGE_WINDOW.self) return;
     } catch (_) {
         return;
     }
-    if (PAGE_LOCATION.hostname !== 'www.youtube.com') return;
+    const SUPPORTED_HOSTS = new Set(['www.youtube.com', 'youtube.com']);
+    if (!SUPPORTED_HOSTS.has(PAGE_LOCATION.hostname)) return;
 
-    const SCRIPT_VERSION = '1.3.4';
+    const SCRIPT_VERSION = '1.3.5';
     const WATCH_PATH = '/watch';
     const SUPPORT_CODE = '3037019';
 
@@ -695,11 +697,13 @@
     }
 
     function run() {
-        if (!onWatchPage()) return;
-
         installDebugApi();
         patchNetworkApis();
         installResourceObserver();
+        patchYtConfig();
+
+        if (!onWatchPage()) return;
+
         try {
             if (STORAGE) STORAGE.setItem(STORAGE_HEARTBEAT_KEY, JSON.stringify({
                 at: new Date().toISOString(),
@@ -712,7 +716,6 @@
 
         keepLactFresh();
         signalActivity();
-        patchYtConfig();
         patchPlayerApi();
 
         if (clearInterruptDialogs()) {
