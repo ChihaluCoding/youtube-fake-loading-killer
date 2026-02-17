@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         YouTubeの偽ローディングをブロックするスクリプト
+// @name         YouTubeの偽ローディングをブロック
 // @version      1.3.5
 // @description  Blocks YouTube interruption toast/dialog, recovers playback, and logs diagnostics for blocker conflicts.
 // @match        https://www.youtube.com/*
